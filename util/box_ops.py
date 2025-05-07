@@ -11,7 +11,7 @@
 Utilities for bounding box manipulation and GIoU.
 """
 import torch
-from torchvision.ops.boxes import box_area
+
 
 
 def box_cxcywh_to_xyxy(x):
@@ -30,6 +30,7 @@ def box_xyxy_to_cxcywh(x):
 
 # modified from torchvision to also return the union
 def box_iou(boxes1, boxes2):
+    from torchvision.ops.boxes import box_area
     area1 = box_area(boxes1)
     area2 = box_area(boxes2)
 

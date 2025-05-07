@@ -18,10 +18,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-import datasets
 import util.misc as utils
-import datasets.samplers as samplers
-from datasets import build_dataset, get_coco_api_from_dataset
 from engine import evaluate, train_one_epoch
 from models import build_model
 
@@ -107,7 +104,7 @@ def get_args_parser():
 
     # dataset parameters
     parser.add_argument('--dataset_file', default='coco')
-    parser.add_argument('--coco_path', default='./data/coco', type=str)
+    parser.add_argument('--coco_path', default='/root/workspace/tiny_coco_dataset/tiny_coco', type=str)
     parser.add_argument('--coco_panoptic_path', type=str)
     parser.add_argument('--remove_difficult', action='store_true')
 
@@ -144,6 +141,10 @@ def main(args):
 
     model, criterion, postprocessors = build_model(args)
     model.to(device)
+
+    import datasets.samplers as samplers
+    from datasets import build_dataset, get_coco_api_from_dataset
+    import datasets
 
     model_without_ddp = model
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
