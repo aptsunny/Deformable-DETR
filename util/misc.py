@@ -25,6 +25,7 @@ import torch.nn as nn
 import torch.distributed as dist
 from torch import Tensor
 
+"""
 # needed due to empty tensor bug in pytorch and torchvision 0.5
 import torchvision
 if float(torchvision.__version__[:3]) < 0.5:
@@ -57,7 +58,7 @@ if float(torchvision.__version__[:3]) < 0.5:
 elif float(torchvision.__version__[:3]) < 0.7:
     from torchvision.ops import _new_empty_tensor
     from torchvision.ops.misc import _output_size
-
+"""
 
 class SmoothedValue(object):
     """Track a series of values and provide access to smoothed values over a

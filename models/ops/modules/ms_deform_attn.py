@@ -76,6 +76,7 @@ class MSDeformAttn(nn.Module):
         constant_(self.output_proj.bias.data, 0.)
 
     def forward(self, query, reference_points, input_flatten, input_spatial_shapes, input_level_start_index, input_padding_mask=None):
+        import pdb;pdb.set_trace()
         """
         :param query                       (N, Length_{query}, C)
         :param reference_points            (N, Length_{query}, n_levels, 2), range in [0, 1], top-left (0,0), bottom-right (1, 1), including padding area
@@ -109,6 +110,12 @@ class MSDeformAttn(nn.Module):
         else:
             raise ValueError(
                 'Last dim of reference_points must be 2 or 4, but get {} instead.'.format(reference_points.shape[-1]))
+        # value torch.Size([2, 10723, 8, 32])
+        # torch.Size([4, 2])
+        # torch.Size([4])
+        # sampling_locations.shape torch.Size([2, 10723, 8, 4, 4, 2])
+        # torch.Size([2, 10723, 8, 4, 4])
+        # 64
         output = MSDeformAttnFunction.apply(
             value, input_spatial_shapes, input_level_start_index, sampling_locations, attention_weights, self.im2col_step)
         output = self.output_proj(output)

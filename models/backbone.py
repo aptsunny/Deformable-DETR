@@ -14,9 +14,9 @@ from collections import OrderedDict
 
 import torch
 import torch.nn.functional as F
-import torchvision
+
 from torch import nn
-from torchvision.models._utils import IntermediateLayerGetter
+
 from typing import Dict, List
 
 from util.misc import NestedTensor, is_main_process
@@ -80,6 +80,7 @@ class BackboneBase(nn.Module):
             return_layers = {'layer4': "0"}
             self.strides = [32]
             self.num_channels = [2048]
+        from torchvision.models._utils import IntermediateLayerGetter
         self.body = IntermediateLayerGetter(backbone, return_layers=return_layers)
 
     def forward(self, tensor_list: NestedTensor):
@@ -99,10 +100,16 @@ class Backbone(BackboneBase):
                  train_backbone: bool,
                  return_interm_layers: bool,
                  dilation: bool):
+        # import pdb;pdb.set_trace()
         norm_layer = FrozenBatchNorm2d
-        backbone = getattr(torchvision.models, name)(
-            replace_stride_with_dilation=[False, False, dilation],
-            pretrained=is_main_process(), norm_layer=norm_layer)
+        # import torchvision
+        # backbone = getattr(torchvision.models, name)(
+        #     replace_stride_with_dilation=[False, False, dilation],
+        #     pretrained=is_main_process(), norm_layer=norm_layer)
+        from torchvision import models
+        backbone = models.resnet50(
+        replace_stride_with_dilation=[False, False, dilation],
+        pretrained=is_main_process(), norm_layer=norm_layer)
         assert name not in ('resnet18', 'resnet34'), "number of channels are hard coded"
         super().__init__(backbone, train_backbone, return_interm_layers)
         if dilation:

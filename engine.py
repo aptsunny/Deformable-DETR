@@ -17,9 +17,9 @@ from typing import Iterable
 
 import torch
 import util.misc as utils
-from datasets.coco_eval import CocoEvaluator
-from datasets.panoptic_eval import PanopticEvaluator
-from datasets.data_prefetcher import data_prefetcher
+
+
+
 
 
 def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
@@ -34,6 +34,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
     header = 'Epoch: [{}]'.format(epoch)
     print_freq = 10
 
+    from datasets.data_prefetcher import data_prefetcher
     prefetcher = data_prefetcher(data_loader, device, prefetch=True)
     samples, targets = prefetcher.next()
 
@@ -89,6 +90,8 @@ def evaluate(model, criterion, postprocessors, data_loader, base_ds, device, out
     header = 'Test:'
 
     iou_types = tuple(k for k in ('segm', 'bbox') if k in postprocessors.keys())
+    from datasets.coco_eval import CocoEvaluator
+    from datasets.panoptic_eval import PanopticEvaluator
     coco_evaluator = CocoEvaluator(base_ds, iou_types)
     # coco_evaluator.coco_eval[iou_types[0]].params.iouThrs = [0, 0.1, 0.5, 0.75]
 
